@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار تحديد المستوى التفاعلي | إعداد الأستاذ ماجد السويهري - Langua Learn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-coral: #e88d67;
+            --brand-purple: #3b0764;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at top right, #fff1f2 0%, #eff6ff 45%, #f5f3ff 100%);
+            min-height: 100vh;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        .en-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Custom checkmark box under each word option */
+        .under-check-box {
+            width: 44px;
+            height: 36px;
+            border-radius: 12px;
+            border: 2.5px dashed #cbd5e1;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .option-card:hover .under-check-box {
+            border-color: #6366f1;
+            background: #eef2ff;
+            transform: scale(1.06);
+        }
+
+        .option-card.selected .under-check-box {
+            border-style: solid;
+            border-color: #4f46e5;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #ffffff;
+            transform: scale(1.12);
+            box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.55);
+        }
+
+        .option-card.correct-choice .under-check-box {
+            border-style: solid;
+            border-color: #059669;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.55);
+        }
+
+        .option-card.wrong-choice .under-check-box {
+            border-style: solid;
+            border-color: #e11d48;
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            color: #ffffff;
+            box-shadow: 0 8px 20px -4px rgba(225, 29, 72, 0.5);
+        }
+
+        /* Dotted notebook line for sentence rearrangement */
+        .notebook-line {
+            background-image: linear-gradient(to right, #94a3b8 45%, rgba(255,255,255,0) 0%);
+            background-position: bottom;
+            background-size: 12px 2.5px;
+            background-repeat: repeat-x;
+        }
+
+        .word-chip {
+            cursor: grab;
+            user-select: none;
+            transition: all 0.18s ease;
+        }
+        .word-chip:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        /* Question highlight pulse when jumped to from board */
+        @keyframes highlightPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+            50% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0.25); }
+        }
+        .pulse-focus {
+            animation: highlightPulse 1.4s ease-in-out 2;
+        }
+
+        @media print {
+            body {
+                background: #ffffff !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-card {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body class="pb-24">
+
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand & Teacher Identity -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-2xl border-2 border-orange-200 shadow-sm" dir="ltr">
+                    <svg class="w-10 h-10 shrink-0" viewBox="0 0 100 100" fill="none">
+                        <path d="M12 10 H42 L32 25 H26 V75 H42 L32 90 H12 V10 Z" fill="#e88d67"/>
+                        <path d="M46 10 H85 V88 H70 V25 H42 L46 10 Z" fill="#e88d67" opacity="0.9"/>
+                        <polygon points="15,47 50,33 85,47 50,61" fill="#3b0764"/>
+                        <path d="M32 55 V70 C32 76 68 76 68 70 V55 L50 63 L32 55 Z" fill="#4c1d95"/>
+                        <path d="M76 50 V68" stroke="#3b0764" stroke-width="3.5" stroke-linecap="round"/>
+                        <circle cx="76" cy="70" r="3.5" fill="#e88d67" stroke="#3b0764" stroke-width="2"/>
+                    </svg>
+                    <div class="leading-none text-left">
+                        <div class="en-font font-black text-sm tracking-wider text-[#e88d67]">LANGUA</div>
+                        <div class="en-font font-black text-sm tracking-wider text-[#3b0764]">LEARN</div>
+                        <div class="en-font text-[7px] font-bold text-[#e88d67]">Learn, Grow, Succeed</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h1 class="text-base sm:text-xl font-black text-slate-900">اختبار تحديد المستوى التفاعلي الشامل</h1>
+                        <span class="bg-purple-100 text-purple-900 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-purple-200">36 سؤالاً</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-extrabold text-indigo-900">إعداد الأستاذ: ماجد السويهري • Comparative &amp; Superlative + Future Forms</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <!-- Live Progress Pill -->
+                <div class="bg-slate-100 border border-slate-200 rounded-2xl px-3.5 py-1.5 flex items-center gap-3">
+                    <div class="text-right">
+                        <div class="text-[11px] font-bold text-slate-500">الإنجاز الكلي</div>
+                        <div id="headerProgressText" class="text-xs sm:text-sm font-black text-indigo-700">0 / 36 سؤال</div>
+                    </div>
+                    <div class="w-20 sm:w-28 h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div id="headerProgressBar" class="h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Sound Toggle -->
+                <button id="soundToggleBtn" onclick="toggleSoundEffects()"
+                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs px-3 py-2.5 rounded-xl border border-slate-200 transition flex items-center gap-1"
+                    title="تفعيل/كتم المؤثرات الصوتية">
+                    <span id="soundToggleIcon">🔊</span>
+                    <span class="hidden sm:inline">الصوت</span>
+                </button>
+
+                <!-- Submit & Grade Button -->
+                <button onclick="gradePlacementTest()"
+                    class="bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white font-black text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5">
+                    <span>✅ اعتماد الإجابات وتحديد المستوى</span>
+                </button>
+
+                <!-- Print Button -->
+                <button onclick="printStudentResult()"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm px-3.5 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5">
+                    <span>🖨️ طباعة النتيجة</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 pt-6">
+
+        <!-- Student Data & Welcome Banner -->
+        <section class="bg-gradient-to-r from-[#1e1b4b] via-[#31105f] to-[#1e3a8a] text-white rounded-3xl p-5 sm:p-7 shadow-xl mb-6 relative overflow-hidden no-print">
+            <div class="absolute -left-10 -bottom-10 w-52 h-52 bg-orange-400/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+                <div class="lg:col-span-7 space-y-2">
+                    <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-3.5 py-1 rounded-full text-xs font-extrabold text-amber-300 border border-white/20">
+                        <span>✨ Langua Learn Interactive Assessment</span>
+                        <span>•</span>
+                        <span>إشراف الأستاذ ماجد السويهري</span>
+                    </div>
+                    <h2 class="text-xl sm:text-3xl font-black leading-tight">
+                        اختبار تحديد المستوى التفاعلي (المقارنة والتفضيل &amp; صيغ المستقبل)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-indigo-100 font-semibold leading-relaxed">
+                        يتكون الاختبار من قسمين: <strong>السؤال الأول (30 فقرة)</strong> ضع علامة صح <span class="bg-emerald-500 text-white px-1.5 py-0.5 rounded font-black">✓</span> تحت الكلمة الصحيحة، و<strong>السؤال الثاني (6 فقرات)</strong> رتّب الكلمات المبعثرة لتكوين جملة صحيحة.
+                    </p>
+                </div>
+
+                <!-- Student Input Fields -->
+                <div class="lg:col-span-5 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-extrabold text-amber-200 mb-1">👤 اسم الطالب / الطالبة:</label>
+                            <input id="studentNameInput" type="text" placeholder="اكتب اسمك الثلاثي هنا..."
+                                oninput="syncStudentInfo()"
+                                class="w-full bg-white text-slate-900 font-extrabold text-sm rounded-xl px-3.5 py-2 border-2 border-transparent focus:border-amber-400 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold text-amber-200 mb-1">🏫 الصف / المجموعة:</label>
+                            <input id="studentClassInput" type="text" placeholder="مثال: الصف السادس / أ"
+                                oninput="syncStudentInfo()"
+                                class="w-full bg-white text-slate-900 font-extrabold text-sm rounded-xl px-3.5 py-2 border-2 border-transparent focus:border-amber-400 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-indigo-100 font-bold">
+                        <span>🎯 الدرجة الكلية: <strong>36 درجة</strong></span>
+                        <button onclick="resetEntireTest()" class="text-rose-300 hover:text-rose-200 underline font-extrabold">
+                            🔄 إعادة تصفير الاختبار
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="resultDiagnosticSection" class="hidden mb-8 bg-white rounded-3xl border-4 border-indigo-600 shadow-2xl p-6 sm:p-8 transition-all no-print">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-slate-100 pb-5 mb-6">
+                <div class="flex items-center gap-4">
+                    <div id="resultLevelBadge" class="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-700 text-white en-font font-black text-3xl flex flex-col items-center justify-center shadow-lg">
+                        <span>B2</span>
+                    </div>
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">نتيجة تشخيص المستوى</span>
+                        <h3 id="resultLevelTitle" class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">مستوى متقدم ومتميز</h3>
+                        <p id="resultStudentLabel" class="text-sm font-bold text-slate-600 mt-0.5"></p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="printStudentResult()"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm px-5 py-3 rounded-2xl shadow-lg transition flex items-center gap-2">
+                        <span>🖨️ طباعة التقرير والشهادة</span>
+                    </button>
+                    <button onclick="fillSampleAnswersForDemo()"
+                        class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3 py-2 rounded-xl">
+                        تجربة
+                    </button>
+                </div>
+            </div>
+
+            <!-- Score Breakdown Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-indigo-50/80 border-2 border-indigo-200 rounded-2xl p-4 text-center">
+                    <div class="text-xs font-extrabold text-indigo-800">الدرجة النهائية</div>
+                    <div id="scoreTotalDisplay" class="en-font text-3xl font-black text-indigo-950 my-1">0 / 36</div>
+                    <div id="scorePercentDisplay" class="text-xs font-black text-indigo-700 bg-white inline-block px-3 py-0.5 rounded-full border border-indigo-200">0%</div>
+                </div>
+                <div class="bg-sky-50/80 border-2 border-sky-200 rounded-2xl p-4 text-center">
+                    <div class="text-xs font-extrabold text-sky-900">المقارنة والتفضيل (1–15)</div>
+                    <div id="scoreCompDisplay" class="en-font text-2xl font-black text-sky-950 my-1">0 / 15</div>
+                    <div class="text-[11px] font-bold text-sky-700 en-font">Comparative &amp; Superlative</div>
+                </div>
+                <div class="bg-purple-50/80 border-2 border-purple-200 rounded-2xl p-4 text-center">
+                    <div class="text-xs font-extrabold text-purple-900">صيغ المستقبل (16–30)</div>
+                    <div id="scoreFutureDisplay" class="en-font text-2xl font-black text-purple-950 my-1">0 / 15</div>
+                    <div class="text-[11px] font-bold text-purple-700 en-font">will • going to • may • might</div>
+                </div>
+                <div class="bg-amber-50/80 border-2 border-amber-200 rounded-2xl p-4 text-center">
+                    <div class="text-xs font-extrabold text-amber-900">ترتيب الجمل (31–36)</div>
+                    <div id="scoreRearrangeDisplay" class="en-font text-2xl font-black text-amber-950 my-1">0 / 6</div>
+                    <div class="text-[11px] font-bold text-amber-800 en-font">Rewrite the sentences</div>
+                </div>
+            </div>
+
+            <div id="resultRecommendationBox" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 text-sm font-extrabold text-slate-800 leading-relaxed"></div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start no-print">
+
+            <!-- MAIN QUESTIONS COLUMN (8 cols on desktop) -->
+            <main class="lg:col-span-8 xl:col-span-9 space-y-8">
+
+                <!-- Section Filter Tabs -->
+                <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center gap-2">
+                    <button onclick="filterTestSection('all')" id="tabBtn-all"
+                        class="section-tab flex-1 min-w-[140px] py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition bg-indigo-600 text-white shadow">
+                        📋 جميع الأسئلة (1 – 36)
+                    </button>
+                    <button onclick="filterTestSection('part1A')" id="tabBtn-part1A"
+                        class="section-tab flex-1 min-w-[140px] py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        ⚖️ المقارنة والتفضيل (1 – 15)
+                    </button>
+                    <button onclick="filterTestSection('part1B')" id="tabBtn-part1B"
+                        class="section-tab flex-1 min-w-[140px] py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        🚀 صيغ المستقبل (16 – 30)
+                    </button>
+                    <button onclick="filterTestSection('part2')" id="tabBtn-part2"
+                        class="section-tab flex-1 min-w-[140px] py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        ✍️ رتب الكلمات (31 – 36)
+                    </button>
+                </div>
+
+                <!-- ===============================================================
+                     QUESTION 1 (PART A: 1-15): COMPARATIVE & SUPERLATIVE
+                     =============================================================== -->
+                <section id="section-part1A" class="space-y-4">
+                    <div class="bg-gradient-to-r from-[#1e4e79] to-[#f97316] text-white rounded-3xl p-5 shadow-md flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white/20 px-3 py-0.5 rounded-full text-xs font-extrabold">السؤال الأول • الجزء (أ)</span>
+                                <span class="en-font text-xs font-extrabold text-amber-200">Questions 1 – 15</span>
+                            </div>
+                            <h3 class="text-lg sm:text-xl font-black mt-1">
+                                1) ضع علامة صح (✓) تحت الكلمة الصحيحة — Comparative &amp; Superlative
+                            </h3>
+                            <p class="text-xs text-white/90 font-bold mt-0.5">
+                                انقر على البطاقة أو المربع الموجود تحت الكلمة الصحيحة لوضع علامة (✓)
+                            </p>
+                        </div>
+                        <div class="en-font font-black text-sm bg-white/15 backdrop-blur px-4 py-2 rounded-2xl border border-white/25">
+                            15 Marks
+                        </div>
+                    </div>
+
+                    <div id="mcqContainerPartA" class="space-y-4"></div>
+                </section>
+
+                <!-- ===============================================================
+                     QUESTION 1 (PART B: 16-30): FUTURE FORMS
+                     =============================================================== -->
+                <section id="section-part1B" class="space-y-4">
+                    <div class="bg-gradient-to-r from-[#025492] via-[#15803d] to-[#581c87] text-white rounded-3xl p-5 shadow-md flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white/20 px-3 py-0.5 rounded-full text-xs font-extrabold">السؤال الأول • الجزء (ب)</span>
+                                <span class="en-font text-xs font-extrabold text-amber-200">Questions 16 – 30 (1 – 15 Future)</span>
+                            </div>
+                            <h3 class="text-lg sm:text-xl font-black mt-1">
+                                تابع السؤال الأول: ضع علامة صح (✓) تحت الكلمة الصحيحة — Future Forms
+                            </h3>
+                            <p class="text-xs text-white/90 font-bold mt-0.5">
+                                قواعد المستقبل: (will • Be going to • may • might)
+                            </p>
+                        </div>
+                        <div class="en-font font-black text-sm bg-white/15 backdrop-blur px-4 py-2 rounded-2xl border border-white/25">
+                            15 Marks
+                        </div>
+                    </div>
+
+                    <div id="mcqContainerPartB" class="space-y-4"></div>
+                </section>
+
+                <!-- ===============================================================
+                     QUESTION 2 (31-36): REWRITE / REARRANGE THE SENTENCES (6 Qs)
+                     =============================================================== -->
+                <section id="section-part2" class="space-y-4">
+                    <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-amber-600 text-white rounded-3xl p-5 shadow-md flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white/20 px-3 py-0.5 rounded-full text-xs font-extrabold">السؤال الثاني • 6 جمل</span>
+                                <span class="en-font text-xs font-extrabold text-amber-200">Rewrite the sentences (31 – 36)</span>
+                            </div>
+                            <h3 class="text-lg sm:text-xl font-black mt-1">
+                                2) رتّب الكلمات لتصبح جملة صحيحة — Rewrite the sentences
+                            </h3>
+                            <p class="text-xs text-white/90 font-bold mt-0.5">
+                                اسحب الكلمات وأفلتها على السطر المنقط أو انقر عليها بالترتيب الصحيح لتكوين الجملة
+                            </p>
+                        </div>
+                        <div class="en-font font-black text-sm bg-white/15 backdrop-blur px-4 py-2 rounded-2xl border border-white/25">
+                            6 Marks
+                        </div>
+                    </div>
+
+                    <div id="rearrangeContainer" class="space-y-5"></div>
+                </section>
+
+                <!-- Bottom Submit Bar -->
+                <div class="bg-white rounded-3xl p-5 border-2 border-indigo-100 shadow-lg flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h4 class="font-black text-base sm:text-lg text-slate-900">هل انتهيت من الإجابة على جميع الأسئلة (36 سؤالاً)؟</h4>
+                        <p class="text-xs font-bold text-slate-500">اضغط على زر الاعتماد لإظهار نتيجتك التفصيلية ومستواك مع الشرح القواعدي لكل سؤال.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="gradePlacementTest()"
+                            class="bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white font-black text-sm px-6 py-3 rounded-2xl shadow-lg transition">
+                            ✅ اعتماد الإجابات وإظهار النتيجة
+                        </button>
+                        <button onclick="printStudentResult()"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm px-5 py-3 rounded-2xl shadow-lg transition">
+                            🖨️ طباعة النتيجة
+                        </button>
+                    </div>
+                </div>
+
+            </main>
+
+            <aside class="lg:col-span-4 xl:col-span-3 lg:sticky lg:top-20 space-y-4">
+                <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-xl p-4 sm:p-5">
+                    <!-- Board Header -->
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-black">🧭</span>
+                            <div>
+                                <h3 class="font-black text-sm sm:text-base text-slate-900">لوحة الأسئلة التفاعلية</h3>
+                                <p class="text-[11px] font-bold text-slate-500">انقر على رقم السؤال للانتقال إليه</p>
+                            </div>
+                        </div>
+                        <span id="boardAnsweredBadge" class="bg-indigo-50 text-indigo-700 font-black text-xs px-2.5 py-1 rounded-xl border border-indigo-200">
+                            0 / 36
+                        </span>
+                    </div>
+
+                    <!-- Status Legend -->
+                    <div class="grid grid-cols-2 gap-1.5 text-[11px] font-extrabold text-slate-600 mb-4 bg-slate-50 p-2.5 rounded-2xl border border-slate-100">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded bg-white border-2 border-slate-300 inline-block"></span>
+                            <span>لم يُجب (<span id="legendUnanswered">36</span>)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded bg-indigo-600 inline-block"></span>
+                            <span>تمت الإجابة (<span id="legendAnswered">0</span>)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded bg-emerald-500 inline-block"></span>
+                            <span>إجابة صحيحة (<span id="legendCorrect">-</span>)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded bg-rose-500 inline-block"></span>
+                            <span>إجابة خاطئة (<span id="legendWrong">-</span>)</span>
+                        </div>
+                    </div>
+
+                    <!-- Group 1A: Comparative & Superlative (1-15) -->
+                    <div class="mb-3">
+                        <div class="flex items-center justify-between text-xs font-black text-[#1e4e79] mb-1.5">
+                            <span>س1 (أ): المقارنة والتفضيل</span>
+                            <span class="en-font">1 – 15</span>
+                        </div>
+                        <div id="navGridPart1A" class="grid grid-cols-5 gap-1.5" dir="ltr"></div>
+                    </div>
+
+                    <!-- Group 1B: Future Forms (16-30) -->
+                    <div class="mb-3 pt-2 border-t border-slate-100">
+                        <div class="flex items-center justify-between text-xs font-black text-[#15803d] mb-1.5">
+                            <span>س1 (ب): صيغ المستقبل</span>
+                            <span class="en-font">16 – 30</span>
+                        </div>
+                        <div id="navGridPart1B" class="grid grid-cols-5 gap-1.5" dir="ltr"></div>
+                    </div>
+
+                    <!-- Group 2: Rearrange Sentences (31-36) -->
+                    <div class="pt-2 border-t border-slate-100">
+                        <div class="flex items-center justify-between text-xs font-black text-purple-800 mb-1.5">
+                            <span>س2: رتب الكلمات لتصبح جملة</span>
+                            <span class="en-font">31 – 36</span>
+                        </div>
+                        <div id="navGridPart2" class="grid grid-cols-6 gap-1.5" dir="ltr"></div>
+                    </div>
+
+                    <!-- Teacher Signature Card inside Sidebar -->
+                    <div class="mt-4 pt-3 border-t border-slate-200">
+                        <div class="bg-gradient-to-r from-indigo-950 to-purple-950 text-white rounded-2xl p-3 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-amber-400 text-lg">✒️</span>
+                                <div>
+                                    <div class="text-[10px] text-indigo-200 font-bold">إعداد وإشراف</div>
+                                    <div class="text-xs sm:text-sm font-black">الأستاذ: ماجد السويهري</div>
+                                </div>
+                            </div>
+                            <span class="en-font text-[10px] font-black text-orange-300 border border-orange-400/40 px-2 py-0.5 rounded-lg">LANGUA LEARN</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+
+        <section id="printableReportArea" class="hidden print-only bg-white p-6 rounded-3xl border-4 border-slate-800">
+            <!-- Print Header -->
+            <div class="flex items-center justify-between border-b-4 border-indigo-900 pb-4 mb-6">
+                <div class="flex items-center gap-3" dir="ltr">
+                    <svg class="w-14 h-14 shrink-0" viewBox="0 0 100 100" fill="none">
+                        <path d="M12 10 H42 L32 25 H26 V75 H42 L32 90 H12 V10 Z" fill="#e88d67"/>
+                        <path d="M46 10 H85 V88 H70 V25 H42 L46 10 Z" fill="#e88d67" opacity="0.9"/>
+                        <polygon points="15,47 50,33 85,47 50,61" fill="#3b0764"/>
+                        <path d="M32 55 V70 C32 76 68 76 68 70 V55 L50 63 L32 55 Z" fill="#4c1d95"/>
+                        <path d="M76 50 V68" stroke="#3b0764" stroke-width="3.5" stroke-linecap="round"/>
+                        <circle cx="76" cy="70" r="3.5" fill="#e88d67" stroke="#3b0764" stroke-width="2"/>
+                    </svg>
+                    <div class="leading-none text-left">
+                        <div class="en-font font-black text-xl tracking-wider text-[#e88d67]">LANGUA</div>
+                        <div class="en-font font-black text-xl tracking-wider text-[#3b0764]">LEARN</div>
+                        <div class="en-font text-[9px] font-bold text-[#e88d67]">Learn, Grow, Succeed</div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <h1 class="text-2xl font-black text-slate-900">تقرير وشهادة اختبار تحديد المستوى</h1>
+                    <p class="text-sm font-extrabold text-indigo-900 mt-0.5">Comparative &amp; Superlative • Future Forms • Sentence Building</p>
+                    <p class="text-xs font-black text-purple-900 mt-1">إعداد الأستاذ: ماجد السويهري</p>
+                </div>
+
+                <div class="text-left text-xs font-extrabold text-slate-600 space-y-1">
+                    <div id="printDateDisplay">التاريخ: —</div>
+                    <div>الدرجة الكلية: 36 درجة</div>
+                </div>
+            </div>
+
+            <!-- Print Student Summary Grid -->
+            <div class="grid grid-cols-4 gap-3 mb-6 text-center">
+                <div class="border-2 border-slate-300 rounded-2xl p-3">
+                    <div class="text-xs font-bold text-slate-500">اسم الطالب / الطالبة</div>
+                    <div id="printStudentName" class="text-base font-black text-slate-900 mt-1">غير محدد</div>
+                </div>
+                <div class="border-2 border-slate-300 rounded-2xl p-3">
+                    <div class="text-xs font-bold text-slate-500">الصف / المجموعة</div>
+                    <div id="printStudentClass" class="text-base font-black text-slate-900 mt-1">غير محدد</div>
+                </div>
+                <div class="border-2 border-indigo-400 bg-indigo-50 rounded-2xl p-3">
+                    <div class="text-xs font-bold text-indigo-800">الدرجة النهائية والنسبة</div>
+                    <div id="printTotalScore" class="en-font text-lg font-black text-indigo-950 mt-1">0 / 36 (0%)</div>
+                </div>
+                <div class="border-2 border-purple-400 bg-purple-50 rounded-2xl p-3">
+                    <div class="text-xs font-bold text-purple-800">المستوى التشخيصي</div>
+                    <div id="printLevelResult" class="text-base font-black text-purple-950 mt-1">—</div>
+                </div>
+            </div>
+
+            <!-- Print Detailed Table of Answers -->
+            <div class="mb-4">
+                <h3 class="font-black text-sm text-slate-900 mb-2">تفصيل إجابات الطالب في الأقسام الثلاثة (36 سؤالاً):</h3>
+                <div id="printAnswersTableContainer" class="text-xs"></div>
+            </div>
+
+            <!-- Print Footer Signature -->
+            <div class="mt-6 pt-4 border-t-2 border-slate-300 flex items-center justify-between text-xs font-black text-slate-800">
+                <div>إعداد وإشراف الأستاذ: ماجد السويهري</div>
+                <div class="en-font">Langua Learn Academy • Learn, Grow, Succeed</div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Custom Toast Notification -->
+    <div id="toastMessage" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 text-white font-extrabold text-xs sm:text-sm px-5 py-3 rounded-2xl shadow-2xl border border-white/15 no-print"></div>
+
+    <script>
+        // =========================================================================
+        // 1. QUESTION DATA (EXACT TRANSCRIPTION FROM THE 4 UPLOADED WORKSHEETS)
+        // =========================================================================
+
+        const mcqQuestions = [
+            // --- PART 1A: COMPARATIVE & SUPERLATIVE (Questions 1 to 15) ---
+            {
+                id: 1,
+                localNum: 1,
+                part: 'part1A',
+                before: 'Ali is',
+                after: 'than Omar.',
+                options: ['tallest', 'taller', 'the tallest'],
+                correctIndex: 1,
+                ruleAr: 'وجود كلمة (than) للمقارنة بين شخصين (Ali & Omar) يتطلب صفة قصيرة مضافاً لها (-er): taller.'
+            },
+            {
+                id: 2,
+                localNum: 2,
+                part: 'part1A',
+                before: 'This is the',
+                after: 'book in the library.',
+                options: ['more interesting', 'interesting', 'most interesting'],
+                correctIndex: 2,
+                ruleAr: 'تفضيل كتاب واحد على كل المكتبة مع وجود (the) قبل الفراغ وصفة طويلة يتطلب: most interesting.'
+            },
+            {
+                id: 3,
+                localNum: 3,
+                part: 'part1A',
+                before: 'My bag is',
+                after: 'than yours.',
+                options: ['big.', 'bigger', 'biggest'],
+                correctIndex: 1,
+                ruleAr: 'مقارنة بين حقيبتين مع وجود (than)؛ نضاعف الحرف الأخير في الصفة القصيرة (big) ونضيف (-er): bigger.'
+            },
+            {
+                id: 4,
+                localNum: 4,
+                part: 'part1A',
+                before: 'Sara is',
+                after: 'student in the class.',
+                options: ['smart', 'smarter', 'the smartest'],
+                correctIndex: 2,
+                ruleAr: 'تفضيل سارة على الفصل كله (in the class) يتطلب صيغة التفضيل: the smartest.'
+            },
+            {
+                id: 5,
+                localNum: 5,
+                part: 'part1A',
+                before: 'A car is',
+                after: 'than a bike.',
+                options: ['faster', 'fastest', 'fast'],
+                correctIndex: 0,
+                ruleAr: 'مقارنة بين السيارة والدراجة مع وجود (than) تتطلب صفة قصيرة + er: faster.'
+            },
+            {
+                id: 6,
+                localNum: 6,
+                part: 'part1A',
+                before: 'This exercise is',
+                after: 'than the last one.',
+                options: ['the most difficult', 'more difficult', 'difficult'],
+                correctIndex: 1,
+                ruleAr: 'الصفة (difficult) طويلة وبعد الفراغ (than)، لذا نستخدم: more difficult.'
+            },
+            {
+                id: 7,
+                localNum: 7,
+                part: 'part1A',
+                before: 'Ahmed is the',
+                after: 'boy in his family.',
+                options: ['younger', 'youngest', 'young'],
+                correctIndex: 1,
+                ruleAr: 'تفضيل أحمد في عائلته مع وجود (the) قبل الفراغ يتطلب إضافة (-est) للصفة القصيرة: youngest.'
+            },
+            {
+                id: 8,
+                localNum: 8,
+                part: 'part1A',
+                before: 'My house is',
+                after: 'than yours.',
+                options: ['the best.', 'good', 'better'],
+                correctIndex: 2,
+                ruleAr: 'الصفة (good) شاذة، وعند المقارنة مع وجود (than) تتحول إلى: better.'
+            },
+            {
+                id: 9,
+                localNum: 9,
+                part: 'part1A',
+                before: 'English is',
+                after: 'subject for me.',
+                options: ['easier', 'the easiest', 'easy'],
+                correctIndex: 1,
+                ruleAr: 'تفضيل مادة اللغة الإنجليزية من بين جميع المواد يتطلب صيغة التفضيل: the easiest.'
+            },
+            {
+                id: 10,
+                localNum: 10,
+                part: 'part1A',
+                before: 'A lion is stronger',
+                after: 'a cat.',
+                options: ['they', 'than', 'the'],
+                correctIndex: 1,
+                ruleAr: 'بعد صفة المقارنة المنتهية بـ (-er) مثل (stronger) نضع دائماً كلمة: than.'
+            },
+            {
+                id: 11,
+                localNum: 11,
+                part: 'part1A',
+                before: 'Huda wakes',
+                after: 'than Salma.',
+                options: ['early', 'earlier', 'the earliest'],
+                correctIndex: 1,
+                ruleAr: 'مقارنة بين هدى وسلمى مع وجود (than)؛ نحول الـ (y) إلى (i) ونضيف (-er): earlier.'
+            },
+            {
+                id: 12,
+                localNum: 12,
+                part: 'part1A',
+                before: 'Mount Everest is',
+                after: 'highest mountain in the world.',
+                options: ['this', 'than', 'the'],
+                correctIndex: 2,
+                ruleAr: 'قبل صفة التفضيل المنتهية بـ (-est) مثل (highest) نضع أداة التعريف: the.'
+            },
+            {
+                id: 13,
+                localNum: 13,
+                part: 'part1A',
+                before: 'Sharks are',
+                after: 'than kangaroos .',
+                options: ['dangerous.', 'the most dangerous', 'more dangerous'],
+                correctIndex: 2,
+                ruleAr: 'الصفة (dangerous) طويلة وبعد الفراغ (than)، لذا نستخدم صيغة المقارنة: more dangerous.'
+            },
+            {
+                id: 14,
+                localNum: 14,
+                part: 'part1A',
+                before: 'Today is',
+                after: 'day of the week.',
+                options: ['hotter', 'hottest', 'the hottest'],
+                correctIndex: 2,
+                ruleAr: 'تفضيل يوم واحد على أيام الأسبوع كلها (of the week) يتطلب: the hottest.'
+            },
+            {
+                id: 15,
+                localNum: 15,
+                part: 'part1A',
+                before: 'My brother studies',
+                after: 'than I do.',
+                options: ['more carefully', 'the most carefully', 'carefully'],
+                correctIndex: 0,
+                ruleAr: 'مقارنة الحال الطويل (carefully) مع وجود (than) تتطلب: more carefully.'
+            },
+
+            // --- PART 1B: FUTURE FORMS (Questions 16 to 30, numbered 1 to 15 in Worksheet 2) ---
+            {
+                id: 16,
+                localNum: 1,
+                part: 'part1B',
+                before: 'I am',
+                after: 'visit my grandparents tomorrow.',
+                options: ['might', 'going to', 'will'],
+                correctIndex: 1,
+                ruleAr: 'وجود الفعل المساعد (am) قبل الفراغ والفعل بالمصدر بعده يتطلب: going to.'
+            },
+            {
+                id: 17,
+                localNum: 2,
+                part: 'part1B',
+                before: "I'm not sure. We",
+                after: 'go camping this weekend.',
+                options: ['will', 'might', 'are going to'],
+                correctIndex: 1,
+                ruleAr: "عبارة (I'm not sure - لست متأكداً) من الكلمات الدالة على الاحتمال، فنستخدم: might."
+            },
+            {
+                id: 18,
+                localNum: 3,
+                part: 'part1B',
+                before: 'Look at those dark clouds! It is going to',
+                after: '.',
+                options: ['rain.', 'rains', 'will rain'],
+                correctIndex: 0,
+                ruleAr: 'بعد (is going to) يأتي الفعل في المصدر (V1) بدون أي إضافة: rain.'
+            },
+            {
+                id: 19,
+                localNum: 4,
+                part: 'part1B',
+                before: 'I forgot my notebook. I',
+                after: 'bring it tomorrow.',
+                options: ['is going to', 'may', 'will'],
+                correctIndex: 2,
+                ruleAr: 'وعد وقرار لحظي سريع (نسيت دفتري، سأحضره غداً)؛ نستخدم مع القرار اللحظي والوعود: will.'
+            },
+            {
+                id: 20,
+                localNum: 5,
+                part: 'part1B',
+                before: 'We have tickets, so we',
+                after: 'see a movie on Friday.',
+                options: ['are going to', 'will', 'might'],
+                correctIndex: 0,
+                ruleAr: 'لدينا التذاكر مسبقاً (خطة وترتيب مسبق)، لذا نستخدم مع الضمير (we): are going to.'
+            },
+            {
+                id: 21,
+                localNum: 6,
+                part: 'part1B',
+                before: 'Maybe Ali',
+                after: 'come with us.',
+                options: ['may', 'is going to', 'will'],
+                correctIndex: 0,
+                ruleAr: 'كلمة (Maybe - ربما) تدل على الاحتمال (Possibility)، لذا نختار: may.'
+            },
+            {
+                id: 22,
+                localNum: 7,
+                part: 'part1B',
+                before: 'I think our team',
+                after: 'win the match.',
+                options: ['might', 'will', 'is going to'],
+                correctIndex: 1,
+                ruleAr: 'عبارة (I think... - أنا أعتقد) من الكلمات الدالة على التوقع مع: will.'
+            },
+            {
+                id: 23,
+                localNum: 8,
+                part: 'part1B',
+                before: 'My family',
+                after: 'going to travel to Jeddah next week.',
+                options: ['are', 'am', 'is'],
+                correctIndex: 2,
+                ruleAr: 'كلمة (My family) تعامل معاملة الاسم المفرد في هذه الجملة، فتأخذ الفعل المساعد: is.'
+            },
+            {
+                id: 24,
+                localNum: 9,
+                part: 'part1B',
+                before: "I'm not sure, but Sara",
+                after: 'join us.',
+                options: ['might', 'is going to', 'will'],
+                correctIndex: 0,
+                ruleAr: "وجود (I'm not sure) يدل على عدم التأكد والاحتمال الضعيف، فنختار: might."
+            },
+            {
+                id: 25,
+                localNum: 10,
+                part: 'part1B',
+                before: "Don't worry! I",
+                after: 'help you with your suitcases.',
+                options: ['may', 'will', 'am going to'],
+                correctIndex: 1,
+                ruleAr: 'عرض مساعدة ووعد لحظي (لا تقلق! سوف أساعدك)، فنستخدم: will.'
+            },
+            {
+                id: 26,
+                localNum: 11,
+                part: 'part1B',
+                before: 'We saved enough money. We',
+                after: 'buy a new car.',
+                options: ['will', 'are going to', 'might'],
+                correctIndex: 1,
+                ruleAr: 'ادّخرنا المال الكافي مسبقاً (خطة ونية مسبقة)، لذا نستخدم: are going to.'
+            },
+            {
+                id: 27,
+                localNum: 12,
+                part: 'part1B',
+                before: 'Perhaps it may',
+                after: 'sunny tomorrow.',
+                options: ['is', 'been', 'be'],
+                correctIndex: 2,
+                ruleAr: 'بعد (may / might) نضع الفعل في المصدر المجرد (V1)، ومصدر فعل الكينونة هو: be.'
+            },
+            {
+                id: 28,
+                localNum: 13,
+                part: 'part1B',
+                before: 'The phone is ringing. I',
+                after: 'answer it.',
+                options: ['am going to', 'might', 'will'],
+                correctIndex: 2,
+                ruleAr: 'الهاتف يرن الآن وقرار الرد اتُّخذ في نفس اللحظة (قرار لحظي)، فنستخدم: will.'
+            },
+            {
+                id: 29,
+                localNum: 14,
+                part: 'part1B',
+                before: "They aren't sure. They",
+                after: 'visit their grandparents tomorrow.',
+                options: ['might', 'will', 'are going to'],
+                correctIndex: 0,
+                ruleAr: "عبارة (They aren't sure - غير متأكدين) تدل على الاحتمال، فنستخدم: might."
+            },
+            {
+                id: 30,
+                localNum: 15,
+                part: 'part1B',
+                before: 'Look! The baby is',
+                after: 'cry.',
+                options: ['may going to', 'going to', 'will'],
+                correctIndex: 1,
+                ruleAr: 'وجود (is) قبل الفراغ والفعل بالمصدر (cry) بعده يتطلب: going to.'
+            }
+        ];
+
+        // --- QUESTION 2: 6 REWRITE / REARRANGE SENTENCES (Questions 31 to 36) ---
+        const rearrangeQuestions = [
+            {
+                id: 31,
+                localNum: 1,
+                categoryLabel: 'Comparative • المقارنة (ورقة 1 - س1)',
+                promptText: 'than / My / car / faster / is / your bike',
+                tokens: ['than', 'My', 'car', 'faster', 'is', 'your bike'],
+                acceptedAnswers: ['My car is faster than your bike'],
+                displayTarget: 'My car is faster than your bike.',
+                ruleAr: 'نبدا بالفاعل (My car) ثم الفعل (is) ثم صفة المقارنة (faster) متبوعة بـ (than) ثم (your bike).'
+            },
+            {
+                id: 32,
+                localNum: 2,
+                categoryLabel: 'Superlative • التفضيل (ورقة 1 - س2)',
+                promptText: 'the / girl / tallest / is / Nora',
+                tokens: ['the', 'girl', 'tallest', 'is', 'Nora'],
+                acceptedAnswers: ['Nora is the tallest girl'],
+                displayTarget: 'Nora is the tallest girl.',
+                ruleAr: 'نبدأ بالفاعل (Nora) ثم (is) ثم صيغة التفضيل (the tallest) ثم الاسم (girl).'
+            },
+            {
+                id: 33,
+                localNum: 3,
+                categoryLabel: 'Comparative Adverb • مقارنة الأحوال (ورقة 1 - س3)',
+                promptText: 'carefully / more / writes / Ali / than / Sami',
+                tokens: ['carefully', 'more', 'writes', 'Ali', 'than', 'Sami'],
+                acceptedAnswers: ['Ali writes more carefully than Sami'],
+                displayTarget: 'Ali writes more carefully than Sami.',
+                ruleAr: 'نبدأ بالفاعل (Ali) ثم الفعل (writes) ثم مقارنة الحال الطويل (more carefully) ثم (than Sami).'
+            },
+            {
+                id: 34,
+                localNum: 4,
+                categoryLabel: 'Future: Be going to • خطة مستقبلية (ورقة 2 - س1)',
+                promptText: 'going to / buy / is / Ali / a new backpack',
+                tokens: ['going to', 'buy', 'is', 'Ali', 'a new backpack'],
+                acceptedAnswers: ['Ali is going to buy a new backpack'],
+                displayTarget: 'Ali is going to buy a new backpack.',
+                ruleAr: 'الفاعل (Ali) + الفعل المساعد (is) + (going to) + المصدر (buy) + المفعول به (a new backpack).'
+            },
+            {
+                id: 35,
+                localNum: 5,
+                categoryLabel: 'Future: might • احتمال مستقبلي (ورقة 2 - س2)',
+                promptText: 'might / We / camping / go / next weekend',
+                tokens: ['might', 'We', 'camping', 'go', 'next weekend'],
+                acceptedAnswers: ['We might go camping next weekend', 'next weekend We might go camping'],
+                displayTarget: 'We might go camping next weekend.',
+                ruleAr: 'الفاعل (We) + (might) + الفعل بالمصدر (go) + (camping) + ظرف الزمان (next weekend).'
+            },
+            {
+                id: 36,
+                localNum: 6,
+                categoryLabel: 'Future: will • المستقبل البسيط (ورقة 2 - س3)',
+                promptText: 'will / They / travel / by train / tomorrow',
+                tokens: ['will', 'They', 'travel', 'by train', 'tomorrow'],
+                acceptedAnswers: [
+                    'They will travel by train tomorrow',
+                    'They will travel tomorrow by train',
+                    'tomorrow They will travel by train'
+                ],
+                displayTarget: 'They will travel by train tomorrow.',
+                ruleAr: 'الفاعل (They) + (will) + الفعل في المصدر (travel) + وسيلة السفر (by train) + الزمان (tomorrow).'
+            }
+        ];
+
+        // =========================================================================
+        // 2. STATE MANAGEMENT
+        // =========================================================================
+        const state = {
+            mcqAnswers: {},       // { [questionId]: selectedOptionIndex }
+            rearrangeBuilt: {},   // { [questionId]: array of tokenIndices }
+            isGraded: false,
+            soundEnabled: true,
+            draggedTokenInfo: null // { qId, tokenIdx, fromPool }
+        };
+
+        // Initialize rearrange state arrays
+        rearrangeQuestions.forEach(q => {
+            state.rearrangeBuilt[q.id] = [];
+        });
+
+        // =========================================================================
+        // 3. WEB AUDIO SOUND EFFECTS & SPEECH SYNTHESIS
+        // =========================================================================
+        let audioCtx = null;
+
+        function playTone(type) {
+            if (!state.soundEnabled) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+                if (type === 'tick') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(580, now);
+                    osc.frequency.exponentialRampToValueAtTime(860, now + 0.09);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                } else if (type === 'pop') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(420, now);
+                    osc.frequency.exponentialRampToValueAtTime(640, now + 0.08);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                    osc.start(now);
+                    osc.stop(now + 0.09);
+                } else if (type === 'fanfare') {
+                    const notes = [523.25, 659.25, 783.99, 1046.5];
+                    notes.forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.type = 'triangle';
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.frequency.setValueAtTime(freq, now + idx * 0.09);
+                        g.gain.setValueAtTime(0.14, now + idx * 0.09);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.25);
+                        o.start(now + idx * 0.09);
+                        o.stop(now + idx * 0.09 + 0.26);
+                    });
+                }
+            } catch (err) {
+                // Ignore audio context errors if blocked
+            }
+        }
+
+        function toggleSoundEffects() {
+            state.soundEnabled = !state.soundEnabled;
+            document.getElementById('soundToggleIcon').textContent = state.soundEnabled ? '🔊' : '🔇';
+            showToast(state.soundEnabled ? '🔊 تم تفعيل المؤثرات الصوتية' : '🔇 تم كتم المؤثرات الصوتية');
+        }
+
+        function speakEnglishSentence(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const clean = text.replace(/_+/g, ' blank ');
+            const utter = new SpeechSynthesisUtterance(clean);
+            utter.lang = 'en-US';
+            utter.rate = 0.9;
+            window.speechSynthesis.speak(utter);
+        }
+
+        // =========================================================================
+        // 4. RENDERING QUESTION 1 (30 MCQ QUESTIONS WITH CHECKMARK UNDER THE WORD)
+        // =========================================================================
+        function renderAllMCQQuestions() {
+            const containerA = document.getElementById('mcqContainerPartA');
+            const containerB = document.getElementById('mcqContainerPartB');
+            containerA.innerHTML = '';
+            containerB.innerHTML = '';
+
+            const letters = ['a', 'b', 'c'];
+
+            mcqQuestions.forEach(q => {
+                const selectedIdx = state.mcqAnswers[q.id];
+                const isAnswered = selectedIdx !== undefined;
+                const chosenWord = isAnswered ? q.options[selectedIdx].replace(/\.$/, '') : '______';
+
+                let cardBorder = 'border-slate-200 bg-white';
+                let statusBadge = '';
+
+                if (state.isGraded) {
+                    const isCorrect = selectedIdx === q.correctIndex;
+                    if (isCorrect) {
+                        cardBorder = 'border-emerald-400 bg-emerald-50/30';
+                        statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1 rounded-full border border-emerald-300">✅ إجابة صحيحة (+1)</span>`;
+                    } else {
+                        cardBorder = 'border-rose-400 bg-rose-50/30';
+                        statusBadge = `<span class="bg-rose-100 text-rose-800 text-xs font-black px-3 py-1 rounded-full border border-rose-300">❌ إجابة غير صحيحة (0)</span>`;
+                    }
+                } else if (isAnswered) {
+                    cardBorder = 'border-indigo-300 bg-white';
+                    statusBadge = `<span class="bg-indigo-50 text-indigo-700 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-indigo-200">تم الاختيار ✓</span>`;
+                }
+
+                // Build the 3 options with the checkmark box directly UNDER each word
+                const optionsHtml = q.options.map((optText, idx) => {
+                    const isThisSelected = selectedIdx === idx;
+                    let optionStateClass = 'border-slate-200 bg-slate-50/70 hover:bg-indigo-50/40 hover:border-indigo-300';
+                    let checkMarkContent = `<span class="text-slate-300 text-xs font-bold">ضع ✓</span>`;
+
+                    if (state.isGraded) {
+                        if (idx === q.correctIndex) {
+                            optionStateClass = 'correct-choice border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200';
+                            checkMarkContent = `<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/></svg>`;
+                        } else if (isThisSelected && idx !== q.correctIndex) {
+                            optionStateClass = 'wrong-choice border-rose-500 bg-rose-50';
+                            checkMarkContent = `<span class="text-white font-black text-base">✗</span>`;
+                        }
+                    } else if (isThisSelected) {
+                        optionStateClass = 'selected border-indigo-600 bg-indigo-50/80 ring-2 ring-indigo-200';
+                        checkMarkContent = `<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/></svg>`;
+                    }
+
+                    return `
+                        <button type="button"
+                            onclick="selectMCQOption(${q.id}, ${idx})"
+                            class="option-card ${optionStateClass} border-2 rounded-2xl p-3 flex flex-col items-center justify-between gap-2.5 transition-all cursor-pointer text-center group">
+                            <!-- Word Row -->
+                            <div class="flex items-center gap-1.5 en-font text-base sm:text-lg font-extrabold text-slate-900">
+                                <span class="text-xs font-black text-slate-400">${letters[idx]})</span>
+                                <span>${optText}</span>
+                            </div>
+                            <!-- Checkmark Box Underneath the Word -->
+                            <div class="under-check-box" title="انقر لوضع علامة صح تحت هذه الكلمة">
+                                ${checkMarkContent}
+                            </div>
+                        </button>
+                    `;
+                }).join('');
+
+                // Full spoken sentence for TTS button
+                const spokenText = `${q.before} ${isAnswered ? q.options[selectedIdx] : 'blank'} ${q.after}`.replace(/'/g, "\\'");
+
+                const cardHtml = `
+                    <article id="question-card-${q.id}" class="rounded-3xl border-2 ${cardBorder} p-4 sm:p-5 shadow-sm transition-all">
+                        <!-- Top Question Sentence Row -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="w-9 h-9 rounded-xl ${q.part === 'part1A' ? 'bg-[#1e4e79]' : 'bg-[#025492]'} text-white en-font font-black text-sm flex items-center justify-center shadow-sm">
+                                    ${q.id}
+                                </span>
+                                <span class="text-xs font-extrabold text-slate-500">
+                                    ${q.part === 'part1A' ? `المقارنة والتفضيل (س${q.localNum})` : `صيغ المستقبل (س${q.localNum})`}
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                ${statusBadge}
+                                <button type="button" onclick="speakEnglishSentence('${spokenText}')"
+                                    class="bg-slate-100 hover:bg-indigo-100 text-slate-700 hover:text-indigo-700 text-xs font-extrabold px-2.5 py-1.5 rounded-xl border border-slate-200 transition flex items-center gap-1"
+                                    title="استمع لنطق الجملة">
+                                    <span>🔊 نطق</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- English Sentence with Dynamic Blank -->
+                        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 mb-4 text-left" dir="ltr">
+                            <p class="en-font text-base sm:text-xl font-black text-slate-900 leading-relaxed">
+                                <span class="text-indigo-600 mr-1">${q.localNum}-</span>
+                                ${q.before}
+                                <span class="inline-block min-w-[90px] text-center px-3 py-0.5 mx-1 rounded-xl border-b-4 ${isAnswered ? 'bg-indigo-100 text-indigo-900 border-indigo-600' : 'bg-white text-slate-400 border-slate-300'} font-black transition-all">
+                                    ${chosenWord}
+                                </span>
+                                ${q.after}
+                            </p>
+                        </div>
+
+                        <!-- 3 Options Grid with Checkmark Box Under Each Word -->
+                        <div class="grid grid-cols-3 gap-2.5 sm:gap-4" dir="ltr">
+                            ${optionsHtml}
+                        </div>
+
+                        <!-- Grammar Explanation (Shown after grading) -->
+                        ${state.isGraded ? `
+                            <div class="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-extrabold text-slate-800 bg-amber-50/70 p-3 rounded-2xl border border-amber-200">
+                                <div>
+                                    <span class="text-amber-800 font-black">💡 الشرح القواعدي:</span>
+                                    <span>${q.ruleAr}</span>
+                                </div>
+                                <span class="en-font bg-white px-3 py-1 rounded-xl border border-emerald-300 text-emerald-800 font-black" dir="ltr">
+                                    ✓ ${letters[q.correctIndex]}) ${q.options[q.correctIndex]}
+                                </span>
+                            </div>
+                        ` : ''}
+                    </article>
+                `;
+
+                if (q.part === 'part1A') {
+                    containerA.insertAdjacentHTML('beforeend', cardHtml);
+                } else {
+                    containerB.insertAdjacentHTML('beforeend', cardHtml);
+                }
+            });
+        }
+
+        function selectMCQOption(questionId, optionIndex) {
+            state.mcqAnswers[questionId] = optionIndex;
+            if (state.isGraded) {
+                // Allow re-grading live if student adjusts answer
+                state.isGraded = false;
+                document.getElementById('resultDiagnosticSection').classList.add('hidden');
+            }
+            playTone('tick');
+            renderAllMCQQuestions();
+            updateNavigatorAndProgress();
+        }
+
+        // =========================================================================
+        // 5. RENDERING QUESTION 2 (6 REWRITE / REARRANGE SENTENCES, IDs 31-36)
+        // =========================================================================
+        function normalizeSentence(str) {
+            return (str || '')
+                .replace(/[.?!,]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .toLowerCase();
+        }
+
+        function isRearrangeQuestionCorrect(q) {
+            const builtIndices = state.rearrangeBuilt[q.id] || [];
+            const builtStr = builtIndices.map(i => q.tokens[i]).join(' ');
+            const normBuilt = normalizeSentence(builtStr);
+            return q.acceptedAnswers.some(ans => normalizeSentence(ans) === normBuilt);
+        }
+
+        function renderRearrangeQuestions() {
+            const container = document.getElementById('rearrangeContainer');
+            container.innerHTML = '';
+
+            rearrangeQuestions.forEach(q => {
+                const builtIndices = state.rearrangeBuilt[q.id] || [];
+                const isComplete = builtIndices.length === q.tokens.length;
+                const builtSentenceText = builtIndices.map(i => q.tokens[i]).join(' ');
+
+                let cardBorder = 'border-slate-200 bg-white';
+                let statusBadge = '';
+
+                if (state.isGraded) {
+                    const isCorrect = isRearrangeQuestionCorrect(q);
+                    if (isCorrect) {
+                        cardBorder = 'border-emerald-400 bg-emerald-50/30';
+                        statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1 rounded-full border border-emerald-300">✅ ترتيب صحيح (+1)</span>`;
+                    } else {
+                        cardBorder = 'border-rose-400 bg-rose-50/30';
+                        statusBadge = `<span class="bg-rose-100 text-rose-800 text-xs font-black px-3 py-1 rounded-full border border-rose-300">❌ ترتيب غير مكتمل أو خاطئ (0)</span>`;
+                    }
+                } else if (builtIndices.length > 0) {
+                    cardBorder = isComplete ? 'border-purple-400 bg-white' : 'border-indigo-200 bg-white';
+                    statusBadge = `<span class="bg-purple-50 text-purple-800 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-purple-200">${builtIndices.length} / ${q.tokens.length} كلمات</span>`;
+                }
+
+                // Available tokens in pool
+                const poolTokensHtml = q.tokens.map((tok, tokIdx) => {
+                    const isUsed = builtIndices.includes(tokIdx);
+                    if (isUsed) {
+                        return `
+                            <span class="px-3.5 py-2 rounded-xl border-2 border-dashed border-slate-200 text-slate-300 en-font text-sm sm:text-base font-bold select-none">
+                                ${tok}
+                            </span>
+                        `;
+                    }
+                    return `
+                        <button type="button"
+                            draggable="true"
+                            ondragstart="handleTokenDragStart(event, ${q.id}, ${tokIdx}, true)"
+                            onclick="addTokenToSentence(${q.id}, ${tokIdx})"
+                            class="word-chip bg-white hover:bg-indigo-50 text-slate-900 border-2 border-indigo-200 hover:border-indigo-500 px-3.5 py-2 rounded-xl shadow-sm en-font text-sm sm:text-base font-extrabold">
+                            ${tok}
+                        </button>
+                    `;
+                }).join('');
+
+                // Placed tokens on the dotted notebook line
+                const placedTokensHtml = builtIndices.length === 0
+                    ? `<span class="text-xs sm:text-sm font-bold text-slate-400 select-none">اسحب الكلمات إلى هنا أو انقر عليها بالترتيب لتكوين الجملة...</span>`
+                    : builtIndices.map((tokIdx, posIdx) => `
+                        <button type="button"
+                            onclick="removeTokenFromSentence(${q.id}, ${posIdx})"
+                            title="انقر لإرجاع الكلمة"
+                            class="word-chip bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-rose-600 hover:to-rose-700 text-white px-3.5 py-1.5 rounded-xl shadow en-font text-sm sm:text-base font-extrabold flex items-center gap-1.5">
+                            <span>${q.tokens[tokIdx]}</span>
+                            <span class="text-[10px] opacity-75">✕</span>
+                        </button>
+                    `).join('');
+
+                const cardHtml = `
+                    <article id="question-card-${q.id}" class="rounded-3xl border-2 ${cardBorder} p-4 sm:p-6 shadow-sm transition-all">
+                        <!-- Top Header -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-9 h-9 rounded-xl bg-purple-800 text-white en-font font-black text-sm flex items-center justify-center shadow-sm">
+                                    ${q.id}
+                                </span>
+                                <div>
+                                    <span class="text-xs font-black text-purple-900 block">${q.categoryLabel}</span>
+                                    <span class="text-[11px] font-bold text-slate-500">السؤال الثاني • الجملة رقم (${q.localNum})</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-2">
+                                ${statusBadge}
+                                <button type="button" onclick="speakEnglishSentence('${q.displayTarget}')"
+                                    class="bg-slate-100 hover:bg-purple-100 text-slate-700 hover:text-purple-800 text-xs font-extrabold px-2.5 py-1.5 rounded-xl border border-slate-200 transition">
+                                    🔊 نطق الجملة
+                                </button>
+                                <button type="button" onclick="undoLastToken(${q.id})"
+                                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-extrabold px-2.5 py-1.5 rounded-xl border border-slate-200 transition">
+                                    ↩️ تراجع
+                                </button>
+                                <button type="button" onclick="clearSentence(${q.id})"
+                                    class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-extrabold px-2.5 py-1.5 rounded-xl border border-rose-200 transition">
+                                    🗑️ مسح
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Original Scrambled Prompt as shown in Worksheet -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 mb-3 text-left" dir="ltr">
+                            <span class="en-font text-xs font-extrabold text-slate-400 uppercase block">Scrambled Words:</span>
+                            <p class="en-font text-sm sm:text-lg font-black text-slate-800 tracking-wide">
+                                ${q.localNum}) ${q.promptText}
+                            </p>
+                        </div>
+
+                        <!-- Word Bank Chips -->
+                        <div class="mb-4">
+                            <div class="text-xs font-extrabold text-slate-500 mb-2">١. انقر على الكلمات أو اسحبها بالترتيب:</div>
+                            <div class="flex flex-wrap items-center gap-2 p-3 bg-indigo-50/40 rounded-2xl border border-indigo-100" dir="ltr">
+                                ${poolTokensHtml}
+                            </div>
+                        </div>
+
+                        <!-- Dotted Notebook Drop Zone -->
+                        <div>
+                            <div class="flex items-center justify-between text-xs font-extrabold text-slate-600 mb-1.5">
+                                <span>٢. السطر المخصص لتكوين الجملة (انقر على أي كلمة لإزالتها):</span>
+                                <span class="en-font text-indigo-800 font-black" dir="ltr">${builtSentenceText ? builtSentenceText + '.' : ''}</span>
+                            </div>
+                            <div ondragover="handleSentenceDragOver(event)"
+                                 ondrop="handleSentenceDrop(event, ${q.id})"
+                                 class="notebook-line min-h-[60px] bg-amber-50/40 border-2 border-dashed border-indigo-300 rounded-2xl p-3 flex flex-wrap items-center gap-2 transition"
+                                 dir="ltr">
+                                ${placedTokensHtml}
+                            </div>
+                        </div>
+
+                        <!-- Explanation & Model Answer after Grading -->
+                        ${state.isGraded ? `
+                            <div class="mt-4 pt-3 border-t border-slate-200 bg-emerald-50/80 border border-emerald-200 rounded-2xl p-3.5 space-y-1.5">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-black text-emerald-900">✅ الجملة النموذجية الصحيحة:</span>
+                                    <span class="en-font text-sm sm:text-base font-black text-emerald-950 bg-white px-3 py-1 rounded-xl border border-emerald-300" dir="ltr">
+                                        ${q.displayTarget}
+                                    </span>
+                                </div>
+                                <p class="text-xs font-extrabold text-slate-700">💡 ${q.ruleAr}</p>
+                            </div>
+                        ` : ''}
+                    </article>
+                `;
+
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        function addTokenToSentence(qId, tokIdx) {
+            const arr = state.rearrangeBuilt[qId];
+            if (!arr.includes(tokIdx)) {
+                arr.push(tokIdx);
+                if (state.isGraded) {
+                    state.isGraded = false;
+                    document.getElementById('resultDiagnosticSection').classList.add('hidden');
+                }
+                playTone('pop');
+                renderRearrangeQuestions();
+                updateNavigatorAndProgress();
+            }
+        }
+
+        function removeTokenFromSentence(qId, posIdx) {
+            state.rearrangeBuilt[qId].splice(posIdx, 1);
+            if (state.isGraded) {
+                state.isGraded = false;
+                document.getElementById('resultDiagnosticSection').classList.add('hidden');
+            }
+            playTone('pop');
+            renderRearrangeQuestions();
+            updateNavigatorAndProgress();
+        }
+
+        function undoLastToken(qId) {
+            if (state.rearrangeBuilt[qId].length > 0) {
+                state.rearrangeBuilt[qId].pop();
+                playTone('pop');
+                renderRearrangeQuestions();
+                updateNavigatorAndProgress();
+            }
+        }
+
+        function clearSentence(qId) {
+            state.rearrangeBuilt[qId] = [];
+            playTone('pop');
+            renderRearrangeQuestions();
+            updateNavigatorAndProgress();
+        }
+
+        function handleTokenDragStart(event, qId, tokIdx, fromPool) {
+            state.draggedTokenInfo = { qId, tokIdx, fromPool };
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleSentenceDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleSentenceDrop(event, targetQId) {
+            event.preventDefault();
+            if (!state.draggedTokenInfo) return;
+            const { qId, tokIdx } = state.draggedTokenInfo;
+            if (qId === targetQId) {
+                addTokenToSentence(qId, tokIdx);
+            }
+            state.draggedTokenInfo = null;
+        }
+
+        // =========================================================================
+        // 6. QUESTION NAVIGATOR BOARD (1 - 36) & PROGRESS TRACKING
+        // =========================================================================
+        function isQuestionAnswered(id) {
+            if (id <= 30) {
+                return state.mcqAnswers[id] !== undefined;
+            } else {
+                const q = rearrangeQuestions.find(item => item.id === id);
+                return q && state.rearrangeBuilt[id] && state.rearrangeBuilt[id].length === q.tokens.length;
+            }
+        }
+
+        function isQuestionCorrect(id) {
+            if (id <= 30) {
+                const q = mcqQuestions.find(item => item.id === id);
+                return q && state.mcqAnswers[id] === q.correctIndex;
+            } else {
+                const q = rearrangeQuestions.find(item => item.id === id);
+                return q && isRearrangeQuestionCorrect(q);
+            }
+        }
+
+        function updateNavigatorAndProgress() {
+            const grid1A = document.getElementById('navGridPart1A');
+            const grid1B = document.getElementById('navGridPart1B');
+            const grid2 = document.getElementById('navGridPart2');
+
+            grid1A.innerHTML = '';
+            grid1B.innerHTML = '';
+            grid2.innerHTML = '';
+
+            let answeredCount = 0;
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            for (let id = 1; id <= 36; id++) {
+                const answered = isQuestionAnswered(id);
+                if (answered) answeredCount++;
+
+                let btnClass = 'bg-white text-slate-700 border-2 border-slate-200 hover:border-indigo-400';
+
+                if (state.isGraded) {
+                    if (isQuestionCorrect(id)) {
+                        correctCount++;
+                        btnClass = 'bg-emerald-500 text-white border-2 border-emerald-600 shadow-sm';
+                    } else {
+                        wrongCount++;
+                        btnClass = 'bg-rose-500 text-white border-2 border-rose-600 shadow-sm';
+                    }
+                } else if (answered) {
+                    btnClass = 'bg-indigo-600 text-white border-2 border-indigo-700 shadow-sm';
+                }
+
+                const btnHtml = `
+                    <button type="button"
+                        onclick="jumpToQuestion(${id})"
+                        class="${btnClass} h-9 rounded-xl en-font font-black text-xs transition flex items-center justify-center">
+                        ${id}
+                    </button>
+                `;
+
+                if (id <= 15) {
+                    grid1A.insertAdjacentHTML('beforeend', btnHtml);
+                } else if (id <= 30) {
+                    grid1B.insertAdjacentHTML('beforeend', btnHtml);
+                } else {
+                    grid2.insertAdjacentHTML('beforeend', btnHtml);
+                }
+            }
+
+            // Update counters
+            const pct = Math.round((answeredCount / 36) * 100);
+            document.getElementById('headerProgressText').textContent = `${answeredCount} / 36 سؤال`;
+            document.getElementById('headerProgressBar').style.width = `${pct}%`;
+            document.getElementById('boardAnsweredBadge').textContent = `${answeredCount} / 36`;
+
+            document.getElementById('legendUnanswered').textContent = 36 - answeredCount;
+            document.getElementById('legendAnswered').textContent = answeredCount;
+            document.getElementById('legendCorrect').textContent = state.isGraded ? correctCount : '-';
+            document.getElementById('legendWrong').textContent = state.isGraded ? wrongCount : '-';
+        }
+
+        function jumpToQuestion(id) {
+            filterTestSection('all');
+            const target = document.getElementById(`question-card-${id}`);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.classList.remove('pulse-focus');
+                void target.offsetWidth;
+                target.classList.add('pulse-focus');
+            }
+        }
+
+        function filterTestSection(sec) {
+            const sections = ['part1A', 'part1B', 'part2'];
+            sections.forEach(s => {
+                const el = document.getElementById(`section-${s}`);
+                if (sec === 'all' || sec === s) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            ['all', 'part1A', 'part1B', 'part2'].forEach(tab => {
+                const btn = document.getElementById(`tabBtn-${tab}`);
+                if (tab === sec) {
+                    btn.className = 'section-tab flex-1 min-w-[140px] py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition bg-indigo-600 text-white shadow';
+                } else {
+                    btn.className = 'section-tab flex-1 min-w-[140px] py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+                }
+            });
+        }
+
+        // =========================================================================
+        // 7. GRADING, STUDENT LEVEL DIAGNOSTIC & PRINT REPORT
+        // =========================================================================
+        function calculateDetailedScores() {
+            let compScore = 0;      // out of 15
+            let futureScore = 0;    // out of 15
+            let rearrangeScore = 0; // out of 6
+
+            mcqQuestions.forEach(q => {
+                if (state.mcqAnswers[q.id] === q.correctIndex) {
+                    if (q.part === 'part1A') compScore++;
+                    else futureScore++;
+                }
+            });
+
+            rearrangeQuestions.forEach(q => {
+                if (isRearrangeQuestionCorrect(q)) rearrangeScore++;
+            });
+
+            const total = compScore + futureScore + rearrangeScore;
+            const percent = Math.round((total / 36) * 100);
+
+            let cefrCode = 'A1';
+            let levelTitle = 'مبتدئ (A1 Beginner)';
+            let recommendation = 'ننصح بمراجعة لوحة المقارنة والتفضيل (er / than / the -est) ولوحة صيغ المستقبل (will / going to / may / might) وإعادة المحاولة.';
+
+            if (percent >= 90) {
+                cefrCode = 'B2';
+                levelTitle = 'متقدم ومتميز جداً (B2 Upper-Intermediate)';
+                recommendation = 'ما شاء الله! إتقان ممتاز لقواعد المقارنة والتفضيل وصيغ المستقبل وتكوين الجمل باللغة الإنجليزية.';
+            } else if (percent >= 75) {
+                cefrCode = 'B1';
+                levelTitle = 'متوسط مرتفع وجيد جداً (B1 Intermediate)';
+                recommendation = 'مستوى رائع جداً! لديك استيعاب قوي للقواعد مع بعض الأخطاء البسيطة التي يمكنك مراجعتها في الشرح أسفل كل سؤال.';
+            } else if (percent >= 55) {
+                cefrCode = 'A2';
+                levelTitle = 'فوق المبتدئ / أساسي (A2 Elementary)';
+                recommendation = 'مستوى جيد، ولكنك تحتاج إلى التركيز على الكلمات الدالة مثل (than) للمقارنة و(I\'m not sure) للاحتمال بـ (might).';
+            }
+
+            return { compScore, futureScore, rearrangeScore, total, percent, cefrCode, levelTitle, recommendation };
+        }
+
+        function gradePlacementTest() {
+            state.isGraded = true;
+            playTone('fanfare');
+
+            renderAllMCQQuestions();
+            renderRearrangeQuestions();
+            updateNavigatorAndProgress();
+
+            const scores = calculateDetailedScores();
+            const studentName = document.getElementById('studentNameInput').value.trim() || 'طالب متميز';
+            const studentClass = document.getElementById('studentClassInput').value.trim() || 'غير محدد';
+
+            document.getElementById('resultLevelBadge').innerHTML = `<span>${scores.cefrCode}</span>`;
+            document.getElementById('resultLevelTitle').textContent = scores.levelTitle;
+            document.getElementById('resultStudentLabel').textContent = `الطالب/ـة: ${studentName} • الصف: ${studentClass}`;
+
+            document.getElementById('scoreTotalDisplay').textContent = `${scores.total} / 36`;
+            document.getElementById('scorePercentDisplay').textContent = `${scores.percent}%`;
+            document.getElementById('scoreCompDisplay').textContent = `${scores.compScore} / 15`;
+            document.getElementById('scoreFutureDisplay').textContent = `${scores.futureScore} / 15`;
+            document.getElementById('scoreRearrangeDisplay').textContent = `${scores.rearrangeScore} / 6`;
+            document.getElementById('resultRecommendationBox').innerHTML = `📌 <strong>توصية الأستاذ ماجد السويهري:</strong> ${scores.recommendation}`;
+
+            const resultSec = document.getElementById('resultDiagnosticSection');
+            resultSec.classList.remove('hidden');
+            resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            populatePrintReport();
+            showToast(`🎉 تم تصحيح الاختبار! درجتك: ${scores.total} من 36 (${scores.percent}%)`);
+        }
+
+        function populatePrintReport() {
+            const scores = calculateDetailedScores();
+            const studentName = document.getElementById('studentNameInput').value.trim() || 'غير محدد';
+            const studentClass = document.getElementById('studentClassInput').value.trim() || 'غير محدد';
+
+            document.getElementById('printStudentName').textContent = studentName;
+            document.getElementById('printStudentClass').textContent = studentClass;
+            document.getElementById('printTotalScore').textContent = `${scores.total} / 36 (${scores.percent}%)`;
+            document.getElementById('printLevelResult').textContent = scores.levelTitle;
+            document.getElementById('printDateDisplay').textContent = `التاريخ: ${new Date().toLocaleDateString('ar-SA')}`;
+
+            // Build compact print table
+            let rowsHtml = '';
+            mcqQuestions.forEach(q => {
+                const sel = state.mcqAnswers[q.id];
+                const studentAns = sel !== undefined ? q.options[sel] : 'لم يُجب';
+                const correctAns = q.options[q.correctIndex];
+                const ok = sel === q.correctIndex;
+                rowsHtml += `
+                    <tr class="border-b border-slate-200">
+                        <td class="py-1 px-2 font-black en-font text-center">${q.id}</td>
+                        <td class="py-1 px-2 en-font text-left" dir="ltr">${q.before} <u>${correctAns}</u> ${q.after}</td>
+                        <td class="py-1 px-2 en-font font-bold text-center" dir="ltr">${studentAns}</td>
+                        <td class="py-1 px-2 en-font font-bold text-center text-emerald-800" dir="ltr">${correctAns}</td>
+                        <td class="py-1 px-2 font-black text-center ${ok ? 'text-emerald-700' : 'text-rose-700'}">${ok ? '✓ صحيح' : '✗ خطأ'}</td>
+                    </tr>
+                `;
+            });
+
+            rearrangeQuestions.forEach(q => {
+                const built = (state.rearrangeBuilt[q.id] || []).map(i => q.tokens[i]).join(' ');
+                const ok = isRearrangeQuestionCorrect(q);
+                rowsHtml += `
+                    <tr class="border-b border-slate-200 bg-slate-50">
+                        <td class="py-1 px-2 font-black en-font text-center">${q.id}</td>
+                        <td class="py-1 px-2 en-font text-left" dir="ltr">Rewrite: ${q.promptText}</td>
+                        <td class="py-1 px-2 en-font font-bold text-center" dir="ltr">${built || 'لم يُجب'}</td>
+                        <td class="py-1 px-2 en-font font-bold text-center text-emerald-800" dir="ltr">${q.displayTarget}</td>
+                        <td class="py-1 px-2 font-black text-center ${ok ? 'text-emerald-700' : 'text-rose-700'}">${ok ? '✓ صحيح' : '✗ خطأ'}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('printAnswersTableContainer').innerHTML = `
+                <table class="w-full border-collapse border border-slate-300">
+                    <thead>
+                        <tr class="bg-slate-100 border-b-2 border-slate-300 text-slate-800">
+                            <th class="py-1.5 px-2 border border-slate-300">#</th>
+                            <th class="py-1.5 px-2 border border-slate-300">السؤال / الجملة</th>
+                            <th class="py-1.5 px-2 border border-slate-300">إجابة الطالب</th>
+                            <th class="py-1.5 px-2 border border-slate-300">الإجابة الصحيحة</th>
+                            <th class="py-1.5 px-2 border border-slate-300">التقييم</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+            `;
+        }
+
+        function syncStudentInfo() {
+            populatePrintReport();
+        }
+
+        function printStudentResult() {
+            if (!state.isGraded) {
+                gradePlacementTest();
+            } else {
+                populatePrintReport();
+            }
+            setTimeout(() => {
+                window.print();
+            }, 150);
+        }
+
+        function resetEntireTest() {
+            state.mcqAnswers = {};
+            rearrangeQuestions.forEach(q => {
+                state.rearrangeBuilt[q.id] = [];
+            });
+            state.isGraded = false;
+            document.getElementById('resultDiagnosticSection').classList.add('hidden');
+            renderAllMCQQuestions();
+            renderRearrangeQuestions();
+            updateNavigatorAndProgress();
+            showToast('🔄 تم تصفير جميع الإجابات للبدء من جديد');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3200);
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAllMCQQuestions();
+            renderRearrangeQuestions();
+            updateNavigatorAndProgress();
+            populatePrintReport();
+        });
+    </script>
+</body>
+</html>
